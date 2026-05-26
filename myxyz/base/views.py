@@ -1,26 +1,22 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.core.mail import send_mail
 
-from .models import Student, Result
+from django.core.mail import send_mail, EmailMultiAlternatives
+
+from django.template.loader import render_to_string
+
+from .models import Student, Result, Notice, Complaint
 from .forms import StudentForm, ResultFormSet
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 
-import random
-from django.contrib.auth.models import User
-
-from django.core.mail import EmailMultiAlternatives
 from django.db.models import Q, Sum, Count
-from django.db.models import Q
-from .models import Student, Result, Notice
-from .models import Student, Result, Notice, Complaint
 
 from django.http import HttpResponse
 from reportlab.pdfgen import canvas
 
-from django.template.loader import render_to_string
+import random
 
 
 def login_page(request):
@@ -247,8 +243,6 @@ def delete_student(request, id):
 
     return redirect('home')
 
-from django.core.mail import EmailMultiAlternatives
-from django.template.loader import render_to_string
 
 
 @login_required(login_url='login')
@@ -259,9 +253,7 @@ def update_marks(request, id):
 
     student = get_object_or_404(Student, id=id)
 
-    queryset = Result.objects.filter(
-        student=student
-    ).order_by(
+    queryset = Result.objects.filter(student=student).order_by(
         'semester',
         'subject_code'
     )
@@ -270,99 +262,121 @@ def update_marks(request, id):
 
     if request.method == 'POST':
 
-        formset = ResultFormSet(
-            request.POST,
-            queryset=queryset
-        )
+        formset = ResultFormSet(request.POST, queryset=queryset)
 
         if formset.is_valid():
 
             forms = formset.save(commit=False)
 
             for form in formset.forms:
-
                 if form.cleaned_data.get('DELETE'):
-
                     if form.instance.id:
                         form.instance.delete()
 
             for result in forms:
-
                 if result.subject_code and result.subject_name:
-
                     result.student = student
                     result.save()
 
-            # EMAIL SEND
+            results = Result.objects.filter(student=student)
+
+            total_marks = sum(r.total_marks or 0 for r in results)
+            subject_count = results.count()
+            max_marks = subject_count * 100
+
+            percentage = (
+                (total_marks / max_marks) * 100
+                if max_marks > 0
+                else 0
+            )
+
+            cgpa = percentage / 10
+
+            backlog_count = results.filter(result='BACKLOG').count()
+
+            status = 'PASS' if backlog_count == 0 else 'BACKLOG'
+
+            html_message = f"""
+            <html>
+            <body style="font-family:Arial;background:#f4f4f4;padding:20px;">
+
+                <div style="background:white;padding:30px;border-radius:10px;width:80%;margin:auto;">
+
+                    <h1 style="color:#8B0000;text-align:center;">
+                        VTU Result Portal
+                    </h1>
+
+                    <p style="text-align:center;color:gray;">
+                        Student Result Management System
+                    </p>
+
+                    <p>Hello <b>{student.name}</b>,</p>
+
+                    <p>Your VTU Result has been updated successfully.</p>
+
+                    <table style="width:100%;border-collapse:collapse;" border="1">
+
+                        <tr>
+                            <th style="padding:12px;">USN</th>
+                            <td style="padding:12px;">{student.usn}</td>
+                        </tr>
+
+                        <tr>
+                            <th style="padding:12px;">Total Marks</th>
+                            <td style="padding:12px;">{total_marks} / {max_marks}</td>
+                        </tr>
+
+                        <tr>
+                            <th style="padding:12px;">Percentage</th>
+                            <td style="padding:12px;">{round(percentage, 2)}%</td>
+                        </tr>
+
+                        <tr>
+                            <th style="padding:12px;">CGPA</th>
+                            <td style="padding:12px;">{round(cgpa, 2)}</td>
+                        </tr>
+
+                        <tr>
+                            <th style="padding:12px;">Status</th>
+                            <td style="padding:12px;">{status}</td>
+                        </tr>
+
+                    </table>
+
+                    <br>
+
+                    <p>
+                        Regards,<br>
+                        <b>VTU Result Portal</b>
+                    </p>
+
+                </div>
+
+            </body>
+            </html>
+            """
 
             try:
-
-                results = Result.objects.filter(student=student)
-
-                total_marks = sum(
-                    result.total_marks or 0
-                    for result in results
-                )
-
-                max_marks = results.count() * 100
-
-                percentage = 0
-
-                if max_marks > 0:
-                    percentage = (total_marks / max_marks) * 100
-
-                cgpa = round((percentage / 9.5), 2)
-
-                context = {
-
-                    'student': student,
-                    'total_marks': total_marks,
-                    'max_marks': max_marks,
-                    'percentage': round(percentage, 2),
-                    'cgpa': cgpa,
-                    'status': 'PASS'
-
-                }
-
-                html_content = render_to_string(
-                    'result_email.html',
-                    context
-                )
-
                 email = EmailMultiAlternatives(
-
                     'VTU Result Updated',
-
-                    'Your VTU Result has been updated.',
-
+                    'Your VTU Result has been updated successfully.',
                     'shreyashs182@gmail.com',
-
                     [student.email]
-
                 )
 
-                email.attach_alternative(
-                    html_content,
-                    "text/html"
-                )
-
+                email.attach_alternative(html_message, "text/html")
                 email.send()
 
             except Exception as e:
-
                 print("Mail Error:", e)
 
-            return redirect(
-                'student_result',
-                id=student.id
-            )
+            return redirect('student_result', id=student.id)
 
     return render(request, 'update_marks.html', {
-
         'student': student,
         'formset': formset
-
     })
+
 @login_required(login_url='login')
 def student_result(request, id):
 
