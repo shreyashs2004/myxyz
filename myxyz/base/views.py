@@ -20,6 +20,9 @@ from .models import Student, Result, Notice, Complaint
 from django.http import HttpResponse
 from reportlab.pdfgen import canvas
 
+from django.template.loader import render_to_string
+
+
 def login_page(request):
 
     if request.user.is_authenticated:
@@ -244,6 +247,9 @@ def delete_student(request, id):
 
     return redirect('home')
 
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+
 
 @login_required(login_url='login')
 def update_marks(request, id):
@@ -285,12 +291,66 @@ def update_marks(request, id):
                 if result.subject_code and result.subject_name:
 
                     result.student = student
-
-                    # IMPORTANT:
-                    # Semester admin form alli select madiddu save agutte.
-                    # Old semester marks overwrite agalla.
-
                     result.save()
+
+            # EMAIL SEND
+
+            try:
+
+                results = Result.objects.filter(student=student)
+
+                total_marks = sum(
+                    result.total_marks or 0
+                    for result in results
+                )
+
+                max_marks = results.count() * 100
+
+                percentage = 0
+
+                if max_marks > 0:
+                    percentage = (total_marks / max_marks) * 100
+
+                cgpa = round((percentage / 9.5), 2)
+
+                context = {
+
+                    'student': student,
+                    'total_marks': total_marks,
+                    'max_marks': max_marks,
+                    'percentage': round(percentage, 2),
+                    'cgpa': cgpa,
+                    'status': 'PASS'
+
+                }
+
+                html_content = render_to_string(
+                    'result_email.html',
+                    context
+                )
+
+                email = EmailMultiAlternatives(
+
+                    'VTU Result Updated',
+
+                    'Your VTU Result has been updated.',
+
+                    'shreyashs182@gmail.com',
+
+                    [student.email]
+
+                )
+
+                email.attach_alternative(
+                    html_content,
+                    "text/html"
+                )
+
+                email.send()
+
+            except Exception as e:
+
+                print("Mail Error:", e)
 
             return redirect(
                 'student_result',
@@ -298,10 +358,11 @@ def update_marks(request, id):
             )
 
     return render(request, 'update_marks.html', {
+
         'student': student,
         'formset': formset
-    })
 
+    })
 @login_required(login_url='login')
 def student_result(request, id):
 

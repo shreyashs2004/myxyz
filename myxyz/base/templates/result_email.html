@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <style>
+
+        body{
+            font-family: Arial;
+            background:#f4f4f4;
+            padding:20px;
+        }
+
+        .container{
+            background:white;
+            width:80%;
+            margin:auto;
+            padding:30px;
+            border-radius:10px;
+        }
+
+        h1{
+            text-align:center;
+            color:darkred;
+        }
+
+        .subtitle{
+            text-align:center;
+            color:gray;
+            margin-bottom:30px;
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+            margin-top:20px;
+        }
+
+        table, th, td{
+            border:1px solid #ccc;
+        }
+
+        th, td{
+            padding:15px;
+            text-align:left;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <center>
+
+        <img src="logo.webp"
+             width="80">
+
+    </center>
+
+    <h1>VTU Result Portal</h1>
+
+    <p class="subtitle">
+        Student Result Management System
+    </p>
+
+    <p>
+        Hello <b>{{ student.name }}</b>,
+    </p>
+
+    <p>
+        Your VTU Result has been updated successfully.
+    </p>
+
+    <table>
+
+        <tr>
+            <th>USN</th>
+            <td>{{ student.usn }}</td>
+        </tr>
+
+        <tr>
+            <th>Total Marks</th>
+            <td>{{ total_marks }} / {{ max_marks }}</td>
+        </tr>
+
+        <tr>
+            <th>Percentage</th>
+            <td>{{ percentage }}%</td>
+        </tr>
+
+        <tr>
+            <th>CGPA</th>
+            <td>{{ cgpa }}</td>
+        </tr>
+
+        <tr>
+            <th>Status</th>
+            <td>{{ status }}</td>
+        </tr>
+
+    </table>
+
+    <br>
+
+    <p>
+        Regards,<br>
+        <b>VTU Result Portal</b>
+    </p>
+
+</div>
+
+</body>
+</html>
