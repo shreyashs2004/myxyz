@@ -1,0 +1,36 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+<h1>All VTU Results</h1>
+
+<table border="1" cellpadding="10">
+    <tr>
+        <th>USN</th>
+        <th>Name</th>
+        <th>Subject Code</th>
+        <th>Subject Name</th>
+        <th>Internal</th>
+        <th>External</th>
+        <th>Total</th>
+        <th>Result</th>
+    </tr>
+
+    {% for i in results %}
+    <tr>
+        <td>{{ i.student.usn }}</td>
+        <td>{{ i.student.name }}</td>
+        <td>{{ i.subject_code }}</td>
+        <td>{{ i.subject_name }}</td>
+        <td>{{ i.internal_marks }}</td>
+        <td>{{ i.external_marks }}</td>
+        <td>{{ i.total_marks }}</td>
+        <td>{{ i.result }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<br>
+<a href="/">Back</a>
+
+{% endblock %}

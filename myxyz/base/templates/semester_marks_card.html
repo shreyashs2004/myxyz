@@ -1,0 +1,88 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+<button onclick="window.print()" class="print-btn">
+    Download / Save PDF
+</button>
+
+<div class="vtu-card">
+
+    <h2>VISVESVARAYA TECHNOLOGICAL UNIVERSITY</h2>
+    <h3>BELAGAVI, KARNATAKA, INDIA</h3>
+    <p>VTU PROVISIONAL RESULTS OF UG / PG EXAMINATION</p>
+
+    <div class="card">
+        <h3>University Seat Number : {{ student.usn }}</h3>
+        <h3>Student Name : {{ student.name }}</h3>
+        <h3>College : {{ student.college }}</h3>
+        <h3>Branch : {{ student.branch }}</h3>
+        <h3>Semester : {{ sem }}</h3>
+    </div>
+
+</div>
+
+<h2 class="sem-title">
+    Semester {{ sem }} Marks Card
+</h2>
+
+<table>
+    <tr>
+        <th>Subject Code</th>
+        <th>Subject Name</th>
+        <th>Internal Marks</th>
+        <th>External Marks</th>
+        <th>Total</th>
+        <th>Result</th>
+    </tr>
+
+    {% for i in results %}
+    <tr>
+        <td>{{ i.subject_code }}</td>
+        <td>{{ i.subject_name }}</td>
+        <td>{{ i.internal_marks }}</td>
+        <td>{{ i.external_marks }}</td>
+        <td>{{ i.total_marks }}</td>
+        <td class="{% if i.result == 'PASS' %}pass{% else %}fail{% endif %}">
+            {{ i.result }}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+<div class="summary">
+    <h2>Total : {{ total }} / {{ max_marks }}</h2>
+    <h2>Subjects : {{ subjects }}</h2>
+    <h2>Percentage : {{ percentage }}%</h2>
+    <h2>SGPA : {{ sgpa }}</h2>
+</div>
+
+{% if backlogs %}
+
+<h2 class="sem-title">
+    Pending Backlog Details
+</h2>
+
+<table>
+    <tr>
+        <th>Semester</th>
+        <th>Subject Code</th>
+        <th>Subject Name</th>
+        <th>Total</th>
+        <th>Grade</th>
+    </tr>
+
+    {% for i in backlogs %}
+    <tr>
+        <td>{{ i.semester }}</td>
+        <td>{{ i.subject_code }}</td>
+        <td>{{ i.subject_name }}</td>
+        <td>{{ i.total_marks }}</td>
+        <td>{{ i.grade }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endif %}
+
+{% endblock %}

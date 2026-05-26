@@ -1,0 +1,71 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+<h2 class="sem-title">
+    Update Marks - {{ student.name }}
+</h2>
+
+<p>
+    <b>USN:</b> {{ student.usn }}
+</p>
+
+<form method="POST">
+
+    {% csrf_token %}
+
+    {{ formset.management_form }}
+
+    <table>
+
+        <tr>
+            <th>Semester</th>
+            <th>Subject Code</th>
+            <th>Subject Name</th>
+            <th>Internal</th>
+            <th>External</th>
+            <th>Delete</th>
+        </tr>
+
+        {% for form in formset %}
+
+        <tr>
+
+            <td>
+                {{ form.id }}
+                {{ form.semester }}
+            </td>
+
+            <td>
+                {{ form.subject_code }}
+            </td>
+
+            <td>
+                {{ form.subject_name }}
+            </td>
+
+            <td>
+                {{ form.internal_marks }}
+            </td>
+
+            <td>
+                {{ form.external_marks }}
+            </td>
+
+            <td>
+                {{ form.DELETE }}
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+    <button type="submit">
+        Save Marks
+    </button>
+
+</form>
+
+{% endblock %}

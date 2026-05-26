@@ -1,0 +1,21 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+<h1>Student Dashboard</h1>
+
+<div class="card">
+
+    <h2>{{ message }}</h2>
+
+    <p>
+        Please contact admin if your result is not linked.
+    </p>
+
+    <a class="btn delete" href="/logout/">
+        Logout
+    </a>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+<h2 class="sem-title">
+    Edit Notice
+</h2>
+
+<form method="POST">
+
+    {% csrf_token %}
+
+    <label>Notice Title</label>
+
+    <input
+        type="text"
+        name="notice_title"
+        value="{{ notice.title }}"
+        required
+    >
+
+    <label>Notice Message</label>
+
+    <textarea
+        name="notice_message"
+        required
+    >{{ notice.message }}</textarea>
+
+    <button type="submit">
+        Update Notice
+    </button>
+
+    <a class="btn" href="/">
+        Back
+    </a>
+
+</form>
+
+{% endblock %}

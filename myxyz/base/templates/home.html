@@ -1,0 +1,251 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+<div class="hero">
+    <h1>VTU Result Portal</h1>
+    <p>Student Result Management System</p>
+</div>
+
+<div class="notice-small-box">
+
+    <h3>📢 Notice Board</h3>
+
+    {% if request.user.is_staff %}
+
+    <form method="POST" class="notice-form">
+        {% csrf_token %}
+
+        <input
+            type="text"
+            name="notice_title"
+            placeholder="Notice title"
+            required
+        >
+
+        <input
+            type="text"
+            name="notice_message"
+            placeholder="Notice message"
+            required
+        >
+
+        <button type="submit">
+            Add Notice
+        </button>
+    </form>
+
+    {% endif %}
+
+    {% for notice in notices %}
+
+    <div class="notice-item">
+
+        <div>
+            <b>{{ notice.title }}</b>
+            <br>
+            <span>{{ notice.message }}</span>
+        </div>
+
+        {% if request.user.is_staff %}
+
+        <div class="notice-actions">
+
+            <a class="btn edit" href="/edit-notice/{{ notice.id }}/">
+                Edit
+            </a>
+
+            <a class="btn delete" href="/delete-notice/{{ notice.id }}/">
+                Delete
+            </a>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+    {% empty %}
+
+    <p>No notices available.</p>
+
+    {% endfor %}
+
+</div>
+
+<div class="quick-scroll">
+    <a href="#branch" class="scroll-btn">
+        Branch Wise Analytics
+    </a>
+</div>
+
+<form method="GET" class="search-box">
+
+    <select name="college">
+
+        <option value="">
+            All Colleges
+        </option>
+
+        {% for college in colleges %}
+
+        <option
+            value="{{ college }}"
+            {% if selected_college == college %}selected{% endif %}
+        >
+            {{ college }}
+        </option>
+
+        {% endfor %}
+
+    </select>
+
+    <input
+        type="text"
+        name="q"
+        placeholder="Search USN, Name, Branch, Semester"
+        value="{{ query|default:'' }}"
+    >
+
+    <button type="submit">
+        Search
+    </button>
+
+    <a class="btn" href="/">
+        Clear
+    </a>
+
+</form>
+
+<h2 class="sem-title" id="analytics">
+    Result Analytics Dashboard
+</h2>
+
+<div class="analytics-grid">
+
+    <div class="analytics-card">
+        <h3>👨‍🎓 Total Students</h3>
+        <p>{{ total_students }}</p>
+    </div>
+
+    <div class="analytics-card">
+        <h3>❌ Total Backlogs</h3>
+        <p>{{ total_backlogs }}</p>
+    </div>
+
+    <div class="analytics-card">
+        <h3>🏆 Topper</h3>
+        <p>{{ topper_name }}</p>
+    </div>
+
+    <div class="analytics-card">
+        <h3>📈 Top Percentage</h3>
+        <p>{{ topper_percentage }}%</p>
+    </div>
+
+    <div class="analytics-card">
+        <h3>🎯 Average CGPA</h3>
+        <p>{{ average_cgpa }}</p>
+    </div>
+
+    <div class="analytics-card">
+        <h3>💼 Placement Eligible</h3>
+        <p>{{ placement_count }}</p>
+    </div>
+
+</div>
+
+{% if request.user.is_staff %}
+
+<a class="btn" href="/add-student/">
+    Add Student
+</a>
+
+{% endif %}
+
+<table>
+
+    <tr>
+        <th>Rank</th>
+        <th>USN</th>
+        <th>Name</th>
+        <th>College</th>
+        <th>Degree</th>
+        <th>Branch</th>
+        <th>Scheme</th>
+        <th>Semester</th>
+        <th>Percentage</th>
+        <th>Action</th>
+    </tr>
+
+    {% for i in students %}
+
+    <tr>
+        <td>{{ i.rank }}</td>
+        <td>{{ i.usn }}</td>
+        <td>{{ i.name }}</td>
+        <td>{{ i.college }}</td>
+        <td>{{ i.degree }}</td>
+        <td>{{ i.branch }}</td>
+        <td>{{ i.scheme }}</td>
+        <td>{{ i.semester }}</td>
+        <td>{{ i.percentage }}%</td>
+
+        <td>
+            <a class="btn" href="/student-result/{{ i.id }}/">
+                Result
+            </a>
+
+            {% if request.user.is_staff %}
+
+            <a class="btn" href="/update-marks/{{ i.id }}/">
+                Marks
+            </a>
+
+            <a class="btn edit" href="/update-student/{{ i.id }}/">
+                Edit
+            </a>
+
+            <a class="btn delete" href="/delete-student/{{ i.id }}/">
+                Delete
+            </a>
+
+            {% endif %}
+        </td>
+    </tr>
+
+    {% empty %}
+
+    <tr>
+        <td colspan="10">
+            No student found
+        </td>
+    </tr>
+
+    {% endfor %}
+
+</table>
+
+<h2 class="sem-title" id="branch">
+    Branch Wise Analytics
+</h2>
+
+<div class="branch-box">
+
+    {% for i in branch_analytics %}
+
+    <div class="branch-row">
+        <span>{{ i.branch }}</span>
+
+        <div class="branch-bar-bg">
+            <div class="branch-bar" style="width: {{ i.count }}5px;">
+                {{ i.count }}
+            </div>
+        </div>
+    </div>
+
+    {% endfor %}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+<h2 class="sem-title">
+    Student Complaints
+</h2>
+
+<table>
+
+    <tr>
+        <th>Student</th>
+        <th>USN</th>
+        <th>College</th>
+        <th>Branch</th>
+        <th>Subject</th>
+        <th>Message</th>
+        <th>Date</th>
+    </tr>
+
+    {% for i in complaints %}
+
+    <tr>
+        <td>
+            {% if i.student %}
+                {{ i.student.name }}
+            {% else %}
+                Unknown
+            {% endif %}
+        </td>
+
+        <td>
+            {% if i.student %}
+                {{ i.student.usn }}
+            {% else %}
+                -
+            {% endif %}
+        </td>
+
+        <td>
+            {% if i.student %}
+                {{ i.student.college }}
+            {% else %}
+                -
+            {% endif %}
+        </td>
+
+        <td>
+            {% if i.student %}
+                {{ i.student.branch }}
+            {% else %}
+                -
+            {% endif %}
+        </td>
+
+        <td>
+            {{ i.subject }}
+        </td>
+
+        <td>
+            {{ i.message }}
+        </td>
+
+        <td>
+            {{ i.date }}
+        </td>
+    </tr>
+
+    {% empty %}
+
+    <tr>
+        <td colspan="7">
+            No complaints available
+        </td>
+    </tr>
+
+    {% endfor %}
+
+</table>
+
+{% endblock %}

@@ -1,0 +1,106 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+{% if student %}
+
+<h2 class="sem-title">
+    My Profile
+</h2>
+
+<div class="simple-profile-card">
+
+    <div class="simple-profile-header">
+
+        <div class="simple-avatar">
+            {{ student.name|slice:":1" }}
+        </div>
+
+        <div>
+            <h2>{{ student.name }}</h2>
+            <p>{{ student.usn }}</p>
+            <span>{{ student.branch }} | {{ student.semester }} Semester</span>
+        </div>
+
+    </div>
+
+    <table class="profile-table">
+        <tr>
+            <th>Email</th>
+            <td>{{ student.email }}</td>
+        </tr>
+
+        <tr>
+            <th>Phone</th>
+            <td>{{ student.phone }}</td>
+        </tr>
+
+        <tr>
+            <th>College</th>
+            <td>{{ student.college }}</td>
+        </tr>
+
+        <tr>
+            <th>Degree</th>
+            <td>{{ student.degree }}</td>
+        </tr>
+
+        <tr>
+            <th>Branch</th>
+            <td>{{ student.branch }}</td>
+        </tr>
+
+        <tr>
+            <th>Semester</th>
+            <td>{{ student.semester }}</td>
+        </tr>
+
+        <tr>
+            <th>Total Marks</th>
+            <td>{{ total }} / {{ max_marks }}</td>
+        </tr>
+
+        <tr>
+            <th>Percentage</th>
+            <td>{{ percentage }}%</td>
+        </tr>
+
+        <tr>
+            <th>CGPA</th>
+            <td>{{ cgpa }}</td>
+        </tr>
+
+        <tr>
+            <th>Backlogs</th>
+            <td>{{ backlog_count }}</td>
+        </tr>
+
+        <tr>
+            <th>Status</th>
+            <td>{{ status }}</td>
+        </tr>
+    </table>
+
+    <div class="profile-buttons">
+
+        <a class="btn" href="/student-result/{{ student.id }}/">
+            View Result
+        </a>
+
+        <a class="btn edit" href="/complaints/">
+            Complaint
+        </a>
+
+    </div>
+
+</div>
+
+{% else %}
+
+<p class="error-box">
+    No profile found for your email.
+</p>
+
+{% endif %}
+
+{% endblock %}

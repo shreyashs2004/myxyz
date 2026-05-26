@@ -1,0 +1,516 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+<h1>Student Result Portal</h1>
+
+<div class="vtu-card">
+
+    <h2>
+        VISVESVARAYA TECHNOLOGICAL UNIVERSITY
+    </h2>
+
+    <p>
+        Belagavi, Karnataka, India
+    </p>
+
+    <div class="card">
+
+        <h3>
+            USN : {{ student.usn }}
+        </h3>
+
+        <h3>
+            Name : {{ student.name }}
+        </h3>
+
+        <h3>
+            Email : {{ student.email }}
+        </h3>
+
+        <h3>
+            Mobile : {{ student.phone }}
+        </h3>
+
+        <h3>
+            College : {{ student.college }}
+        </h3>
+
+        <h3>
+            Degree : {{ student.degree }}
+        </h3>
+
+        <h3>
+            Branch : {{ student.branch }}
+        </h3>
+
+        <h3>
+            Scheme : {{ student.scheme }}
+        </h3>
+
+    </div>
+
+</div>
+
+{% for sem, data in semester_data.items %}
+
+<h2 class="sem-title">
+
+    Semester {{ sem }}
+
+</h2>
+
+<div style="margin-bottom:15px;">
+
+    <a
+        class="btn"
+        href="/marks-card/{{ student.id }}/{{ sem }}/"
+    >
+        Download Semester {{ sem }} Marks Card
+    </a>
+
+</div>
+
+<table>
+
+    <tr>
+
+        <th>
+            Subject Code
+        </th>
+
+        <th>
+            Subject Name
+        </th>
+
+        <th>
+            Internal
+        </th>
+
+        <th>
+            External
+        </th>
+
+        <th>
+            Total
+        </th>
+
+        <th>
+            Grade
+        </th>
+
+        <th>
+            Result
+        </th>
+
+    </tr>
+
+    {% for i in data.results %}
+
+    <tr>
+
+        <td>
+            {{ i.subject_code }}
+        </td>
+
+        <td>
+            {{ i.subject_name }}
+        </td>
+
+        <td>
+            {{ i.internal_marks }}
+        </td>
+
+        <td>
+            {{ i.external_marks }}
+        </td>
+
+        <td>
+            {{ i.total_marks }}
+        </td>
+
+        <td>
+            <b>
+                {{ i.grade }}
+            </b>
+        </td>
+
+        <td class="{% if i.result == 'PASS' %}pass{% else %}fail{% endif %}">
+
+            {{ i.result }}
+
+        </td>
+
+    </tr>
+
+    {% endfor %}
+
+</table>
+
+<div class="summary">
+
+    <h2>
+        Total : {{ data.total }} / {{ data.max_marks }}
+    </h2>
+
+    <h2>
+        Subjects : {{ data.subjects }}
+    </h2>
+
+    <h2>
+        Percentage : {{ data.percentage }}%
+    </h2>
+
+    <h2>
+        SGPA : {{ data.sgpa }}
+    </h2>
+
+</div>
+
+{% endfor %}
+
+<div class="summary">
+
+    <h2>
+        Overall Total : {{ total }} / {{ max_marks }}
+    </h2>
+
+    <h2>
+        Overall Percentage : {{ percentage }}%
+    </h2>
+
+    <h2>
+        CGPA : {{ cgpa }}
+    </h2>
+
+</div>
+
+<h2 class="sem-title">
+    Smart Student Analysis
+</h2>
+
+<div class="analysis-grid">
+
+    <div class="analysis-card">
+
+        <h3>
+            🎖 Achievement Badge
+        </h3>
+
+        <p>
+            {{ achievement_badge }}
+        </p>
+
+    </div>
+
+    <div class="analysis-card">
+
+        <h3>
+            💼 Placement Eligibility
+        </h3>
+
+        {% if placement_eligible %}
+
+            <p class="pass">
+                Eligible for Placement
+            </p>
+
+        {% else %}
+
+            <p class="fail">
+                Not Eligible Yet
+            </p>
+
+        {% endif %}
+
+    </div>
+
+    <div class="analysis-card">
+
+        <h3>
+            🎓 Scholarship Eligibility
+        </h3>
+
+        {% if scholarship_eligible %}
+
+            <p class="pass">
+                Eligible for Scholarship
+            </p>
+
+        {% else %}
+
+            <p class="fail">
+                Not Eligible
+            </p>
+
+        {% endif %}
+
+    </div>
+
+    <div class="analysis-card">
+
+        <h3>
+            🚨 Backlog Alert
+        </h3>
+
+        <p>
+            {{ backlog_alert }}
+        </p>
+
+        <p>
+            Total Backlogs : {{ backlog_count }}
+        </p>
+
+    </div>
+
+</div>
+
+<h2 class="sem-title">
+    Pass / Fail Chart
+</h2>
+
+<div class="chart-box">
+
+    <div class="chart-row">
+
+        <div class="chart-label">
+            Pass Percentage
+        </div>
+
+        <div class="chart-bar-bg">
+
+            <div
+                class="chart-bar-pass"
+                style="width:{% if pass_percentage %}{{ pass_percentage }}{% else %}0{% endif %}%"
+            >
+
+                {% if pass_percentage %}
+                    {{ pass_percentage }}
+                {% else %}
+                    0
+                {% endif %}%
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="chart-row">
+
+        <div class="chart-label">
+            Fail / Backlog Percentage
+        </div>
+
+        <div class="chart-bar-bg">
+
+            <div
+                class="chart-bar-fail"
+                style="width:{% if fail_percentage %}{{ fail_percentage }}{% else %}0{% endif %}%"
+            >
+
+                {% if fail_percentage %}
+                    {{ fail_percentage }}
+                {% else %}
+                    0
+                {% endif %}%
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<h2 class="sem-title">
+    AI Study Recommendation
+</h2>
+
+<div class="recommend-box">
+
+    <h3>
+        🧠 Recommendation
+    </h3>
+
+    <p>
+        {{ study_recommendation }}
+    </p>
+
+</div>
+
+<h2 class="sem-title">
+    Weak Subject Detector
+</h2>
+
+<table>
+
+    <tr>
+
+        <th>
+            Subject Code
+        </th>
+
+        <th>
+            Subject Name
+        </th>
+
+        <th>
+            Total Marks
+        </th>
+
+        <th>
+            Grade
+        </th>
+
+        <th>
+            Status
+        </th>
+
+    </tr>
+
+    {% for i in weak_subjects %}
+
+    <tr>
+
+        <td>
+            {{ i.subject_code }}
+        </td>
+
+        <td>
+            {{ i.subject_name }}
+        </td>
+
+        <td>
+            {{ i.total_marks }}
+        </td>
+
+        <td>
+            <b>
+                {{ i.grade }}
+            </b>
+        </td>
+
+        <td>
+
+            {% if i.total_marks < 40 %}
+
+                Weak / Backlog
+
+            {% elif i.total_marks < 60 %}
+
+                Needs Improvement
+
+            {% else %}
+
+                Good
+
+            {% endif %}
+
+        </td>
+
+    </tr>
+
+    {% endfor %}
+
+</table>
+
+<h2 class="sem-title">
+    Semester Timeline History
+</h2>
+
+<div class="timeline">
+
+    {% for sem, data in semester_data.items %}
+
+    <div class="timeline-item">
+
+        <h3>
+            Semester {{ sem }}
+        </h3>
+
+        <p>
+            Total : {{ data.total }} / {{ data.max_marks }}
+        </p>
+
+        <p>
+            Percentage : {{ data.percentage }}%
+        </p>
+
+        <p>
+            SGPA : {{ data.sgpa }}
+        </p>
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+{% if backlog %}
+
+<h2 class="sem-title">
+    Pending Backlog Subjects
+</h2>
+
+<table>
+
+    <tr>
+
+        <th>
+            Semester
+        </th>
+
+        <th>
+            Subject Code
+        </th>
+
+        <th>
+            Subject Name
+        </th>
+
+        <th>
+            Total
+        </th>
+
+        <th>
+            Grade
+        </th>
+
+    </tr>
+
+    {% for i in backlog %}
+
+    <tr>
+
+        <td>
+            {{ i.semester }}
+        </td>
+
+        <td>
+            {{ i.subject_code }}
+        </td>
+
+        <td>
+            {{ i.subject_name }}
+        </td>
+
+        <td>
+            {{ i.total_marks }}
+        </td>
+
+        <td>
+            <b>
+                {{ i.grade }}
+            </b>
+        </td>
+
+    </tr>
+
+    {% endfor %}
+
+</table>
+
+{% endif %}
+
+{% endblock %}

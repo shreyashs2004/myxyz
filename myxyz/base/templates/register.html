@@ -1,0 +1,258 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+<div class="login-container">
+
+    <div class="login-card">
+
+        <h1>
+            Student Register
+        </h1>
+
+        <p>
+            Create your VTU Result Portal account
+        </p>
+
+        {% if error %}
+
+        <div class="error-box">
+            {{ error }}
+        </div>
+
+        {% endif %}
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <input
+                type="text"
+                name="name"
+                placeholder="Full Name"
+                required
+            >
+
+            <input
+                type="text"
+                name="usn"
+                placeholder="USN"
+                required
+            >
+
+            <input
+                type="email"
+                name="email"
+                placeholder="Email Address"
+                required
+            >
+
+            <input
+                type="text"
+                name="phone"
+                placeholder="Phone Number"
+                required
+            >
+
+            <select
+                name="college"
+                required
+            >
+
+                <option value="">
+                    Select College
+                </option>
+
+                <option value="JVIT">
+                    JVIT
+                </option>
+
+                <option value="ACS">
+                    ACS
+                </option>
+
+                <option value="RR">
+                    RR
+                </option>
+
+                <option value="BMSCE">
+                    BMSCE
+                </option>
+
+                <option value="RVCE">
+                    RVCE
+                </option>
+
+                <option value="MSRIT">
+                    MSRIT
+                </option>
+
+                <option value="PES University">
+                    PES University
+                </option>
+
+                <option value="DSCE">
+                    DSCE
+                </option>
+
+                <option value="NMIT">
+                    NMIT
+                </option>
+
+                <option value="CMRIT">
+                    CMRIT
+                </option>
+
+                <option value="BIT">
+                    BIT
+                </option>
+
+                <option value="RNSIT">
+                    RNSIT
+                </option>
+
+                <option value="BNMIT">
+                    BNMIT
+                </option>
+
+                <option value="New Horizon">
+                    New Horizon
+                </option>
+
+                <option value="Acharya">
+                    Acharya
+                </option>
+
+                <option value="Dayananda Sagar">
+                    Dayananda Sagar
+                </option>
+
+                <option value="Cambridge">
+                    Cambridge
+                </option>
+
+                <option value="SJBIT">
+                    SJBIT
+                </option>
+
+                <option value="Global Academy">
+                    Global Academy
+                </option>
+
+            </select>
+
+            <select
+                name="branch"
+                required
+            >
+
+                <option value="">
+                    Select Branch
+                </option>
+
+                <option value="CSE">
+                    CSE
+                </option>
+
+                <option value="ISE">
+                    ISE
+                </option>
+
+                <option value="ECE">
+                    ECE
+                </option>
+
+                <option value="EEE">
+                    EEE
+                </option>
+
+                <option value="MECHANICAL">
+                    MECHANICAL
+                </option>
+
+                <option value="CIVIL">
+                    CIVIL
+                </option>
+
+                <option value="AIML">
+                    AIML
+                </option>
+
+                <option value="DS">
+                    DS
+                </option>
+
+            </select>
+
+            <select
+                name="semester"
+                required
+            >
+
+                <option value="">
+                    Select Semester
+                </option>
+
+                <option value="1">
+                    1 Semester
+                </option>
+
+                <option value="2">
+                    2 Semester
+                </option>
+
+                <option value="3">
+                    3 Semester
+                </option>
+
+                <option value="4">
+                    4 Semester
+                </option>
+
+                <option value="5">
+                    5 Semester
+                </option>
+
+                <option value="6">
+                    6 Semester
+                </option>
+
+                <option value="7">
+                    7 Semester
+                </option>
+
+                <option value="8">
+                    8 Semester
+                </option>
+
+            </select>
+
+            <input
+                type="password"
+                name="password"
+                placeholder="Create Password"
+                required
+            >
+
+            <button type="submit">
+                Register
+            </button>
+
+        </form>
+
+        <div class="extra-links">
+
+            <a href="/login/">
+                Already Registered? 
+            </a>
+    &nbsp;&nbsp; 
+             <a href="/login/">
+                 Login
+            </a>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,111 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        VTU Result Portal
+    </title>
+
+    <link
+        rel="icon"
+        href="{% static 'logo.webp' %}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{% static 'style.css' %}"
+    >
+
+</head>
+
+<body>
+
+{% if request.user.is_authenticated %}
+
+<div class="navbar">
+
+    <div class="nav-left">
+
+        <h2>
+            VTU RESULT PORTAL
+        </h2>
+
+    </div>
+
+    <div class="nav-right">
+
+        <a href="/">
+            Home
+        </a>
+
+        <a href="/rank-list/">
+            Rank List
+        </a>
+
+        {% if request.user.is_staff %}
+
+        <a href="/add-student/">
+            Add Student
+        </a>
+
+        <a href="/backlog/">
+            Backlogs
+        </a>
+
+        <a href="/registered-users/">
+            Registered Users
+        </a>
+
+        {% else %}
+
+        <a href="/profile/">
+            Profile
+        </a>
+
+        {% endif %}
+
+        <a href="/complaints/" class="complaint-link">
+
+            Complaint
+
+            {% if request.user.is_staff and complaint_count > 0 %}
+                <span class="notify-dot"></span>
+            {% endif %}
+
+        </a>
+
+        <a
+            class="logout-btn"
+            href="/logout/"
+        >
+            Logout
+        </a>
+
+    </div>
+
+</div>
+
+{% endif %}
+
+<div class="container">
+
+    {% block content %}
+
+    {% endblock %}
+
+</div>
+
+</body>
+
+</html>

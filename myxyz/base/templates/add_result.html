@@ -1,0 +1,17 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+<h1>Add VTU Result</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button type="submit">Save Result</button>
+</form>
+
+<br>
+<a href="/">Back</a>
+
+{% endblock %}

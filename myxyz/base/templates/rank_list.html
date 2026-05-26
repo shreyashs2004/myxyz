@@ -1,0 +1,150 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+<h1>Class Rank List</h1>
+
+<form method="GET" class="search-box">
+
+    <select name="semester" required>
+        <option value="">Select Semester</option>
+
+        <option value="1" {% if selected_semester == "1" %}selected{% endif %}>Semester 1</option>
+        <option value="2" {% if selected_semester == "2" %}selected{% endif %}>Semester 2</option>
+        <option value="3" {% if selected_semester == "3" %}selected{% endif %}>Semester 3</option>
+        <option value="4" {% if selected_semester == "4" %}selected{% endif %}>Semester 4</option>
+        <option value="5" {% if selected_semester == "5" %}selected{% endif %}>Semester 5</option>
+        <option value="6" {% if selected_semester == "6" %}selected{% endif %}>Semester 6</option>
+        <option value="7" {% if selected_semester == "7" %}selected{% endif %}>Semester 7</option>
+        <option value="8" {% if selected_semester == "8" %}selected{% endif %}>Semester 8</option>
+    </select>
+
+    <select name="branch">
+        <option value="">All Branches</option>
+        <option value="CSE" {% if selected_branch == "CSE" %}selected{% endif %}>CSE</option>
+        <option value="ISE" {% if selected_branch == "ISE" %}selected{% endif %}>ISE</option>
+        <option value="ECE" {% if selected_branch == "ECE" %}selected{% endif %}>ECE</option>
+        <option value="EEE" {% if selected_branch == "EEE" %}selected{% endif %}>EEE</option>
+        <option value="MECHANICAL" {% if selected_branch == "MECHANICAL" %}selected{% endif %}>MECHANICAL</option>
+        <option value="CIVIL" {% if selected_branch == "CIVIL" %}selected{% endif %}>CIVIL</option>
+        <option value="AIML" {% if selected_branch == "AIML" %}selected{% endif %}>AIML</option>
+        <option value="DS" {% if selected_branch == "DS" %}selected{% endif %}>DATA SCIENCE</option>
+    </select>
+
+    <input
+        type="text"
+        name="subject_code"
+        placeholder="Subject Code"
+        value="{{ subject_code }}"
+    >
+
+    <button type="submit">Show Rank</button>
+
+</form>
+
+{% if selected_semester %}
+
+<h2 class="sem-title">
+    Semester {{ selected_semester }}
+    {% if selected_branch %}
+        - {{ selected_branch }} Branch Rank
+    {% else %}
+        - All Branch Rank
+    {% endif %}
+</h2>
+
+<table>
+    <tr>
+        <th>Rank</th>
+        <th>Medal</th>
+        <th>USN</th>
+        <th>Name</th>
+        <th>Branch</th>
+        <th>Total</th>
+        <th>Subjects</th>
+        <th>Max Marks</th>
+        <th>Percentage</th>
+        <th>CGPA</th>
+        <th>Backlogs</th>
+    </tr>
+
+    {% for i in rank_data %}
+    <tr>
+        <td>{{ forloop.counter }}</td>
+
+        <td>
+            {% if forloop.counter == 1 %}
+                🥇 Gold
+            {% elif forloop.counter == 2 %}
+                🥈 Silver
+            {% elif forloop.counter == 3 %}
+                🥉 Bronze
+            {% else %}
+                🎖️
+            {% endif %}
+        </td>
+
+        <td>{{ i.student.usn }}</td>
+        <td>{{ i.student.name }}</td>
+        <td>{{ i.student.branch }}</td>
+        <td>{{ i.total }}</td>
+        <td>{{ i.subjects }}</td>
+        <td>{{ i.max_marks }}</td>
+        <td>{{ i.percentage }}%</td>
+        <td>{{ i.cgpa }}</td>
+        <td>{{ i.backlog_count }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endif %}
+
+{% if subject_code %}
+
+<h2 class="sem-title">
+    Subject Wise Rank - {{ subject_code }}
+</h2>
+
+<table>
+    <tr>
+        <th>Rank</th>
+        <th>Medal</th>
+        <th>USN</th>
+        <th>Name</th>
+        <th>Subject Code</th>
+        <th>Subject Name</th>
+        <th>Marks</th>
+        <th>Grade</th>
+        <th>Result</th>
+    </tr>
+
+    {% for i in subject_rank_data %}
+    <tr>
+        <td>{{ forloop.counter }}</td>
+
+        <td>
+            {% if forloop.counter == 1 %}
+                🥇 Gold
+            {% elif forloop.counter == 2 %}
+                🥈 Silver
+            {% elif forloop.counter == 3 %}
+                🥉 Bronze
+            {% else %}
+                🎖️
+            {% endif %}
+        </td>
+
+        <td>{{ i.student.usn }}</td>
+        <td>{{ i.student.name }}</td>
+        <td>{{ i.subject_code }}</td>
+        <td>{{ i.subject_name }}</td>
+        <td>{{ i.marks }}</td>
+        <td>{{ i.grade }}</td>
+        <td>{{ i.result }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endif %}
+
+{% endblock %}

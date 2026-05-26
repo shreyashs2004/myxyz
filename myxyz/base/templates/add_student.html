@@ -1,0 +1,48 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+<h1>Add Student</h1>
+
+<form method="POST">
+
+    {% csrf_token %}
+
+    <div class="form-box">
+
+        <label>USN</label>
+        {{ form.usn }}
+
+        <label>Name</label>
+        {{ form.name }}
+
+        <label>Email</label>
+        {{ form.email }}
+
+        <label>Phone Number</label>
+        {{ form.phone }}
+
+        <label>College</label>
+        {{ form.college }}
+
+        <label>Degree</label>
+        {{ form.degree }}
+
+        <label>Branch</label>
+        {{ form.branch }}
+
+        <label>Scheme</label>
+        {{ form.scheme }}
+
+        <label>Semester</label>
+        {{ form.semester }}
+
+        <button type="submit" class="save-btn">
+            Save Student
+        </button>
+
+    </div>
+
+</form>
+
+{% endblock %}
